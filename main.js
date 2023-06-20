@@ -1,25 +1,51 @@
-const timer = document.getElementById('timer');
-const start=document.getElementById("start");
-let startTime;
+const time = document.getElementById('time');
+const startButton = document.getElementById('start');
+const stopButton = document.getElementById('stop');
+const resetButton = document.getElementById('reset');
 
-//startボタンを押した時にイベントが起動
-start.addEventListener('click', () => {
- startTime = Date.now();
- console.log(startTime);
- console.log(new Date(startTime))
- countUp();
+// 開始時間
+let startTime;
+// 停止時間
+let stopTime = 0;
+// タイムアウトID
+let timeoutID;
+
+// 時間を表示する関数
+function displayTime() {
+  const currentTime = new Date(Date.now() - startTime + stopTime);
+  const h = String(currentTime.getHours()-1).padStart(2, '0');
+  const m = String(currentTime.getMinutes()).padStart(2, '0');
+  const s = String(currentTime.getSeconds()).padStart(2, '0');
+  const ms = String(currentTime.getMilliseconds()).padStart(3, '0');
+
+  time.textContent = `${h}:${m}:${s}.${ms}`;
+  timeoutID = setTimeout(displayTime, 10);
+}
+
+// スタートボタンがクリックされたら時間を進める
+startButton.addEventListener('click', () => {
+  startButton.disabled = true;
+  stopButton.disabled = false;
+  resetButton.disabled = true;
+  startTime = Date.now();
+  displayTime();
 });
 
-//coutUp()関数の中身
-function countUp() {
- const d=new Date(Date.now()-startTime);
- const m=String(d.getMinutes()).padStart(2,"0");
- const s=String(d.getSeconds()).padStart(2,"0");
- const ms =String(d.getMilliseconds()).padStart(3,"0");
- timer.textContent = `${m}:${s},${ms}`;
+// ストップボタンがクリックされたら時間を止める
+stopButton.addEventListener('click', function() {
+  startButton.disabled = false;
+  stopButton.disabled = true;
+  resetButton.disabled = false;
+  clearTimeout(timeoutID);
+  stopTime += (Date.now() - startTime);
+});
 
- setTimeout(() => {
-   countUp();
- }, 10);
-}
+// リセットボタンがクリックされたら時間を0に戻す
+resetButton.addEventListener('click', function() {
+  startButton.disabled = false;
+  stopButton.disabled = true;
+  resetButton.disabled = true;
+  time.textContent = '00:00:00.000';
+  stopTime = 0;
+});
 
