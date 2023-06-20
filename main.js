@@ -13,12 +13,10 @@ let timeoutID;
 // 時間を表示する関数
 function displayTime() {
   const currentTime = new Date(Date.now() - startTime + stopTime);
-  const h = String(currentTime.getHours()-1).padStart(2, '0');
   const m = String(currentTime.getMinutes()).padStart(2, '0');
   const s = String(currentTime.getSeconds()).padStart(2, '0');
-  const ms = String(currentTime.getMilliseconds()).padStart(3, '0');
 
-  time.textContent = `${h}:${m}:${s}.${ms}`;
+  time.textContent = `${m}:${s}`;
   timeoutID = setTimeout(displayTime, 10);
 }
 
